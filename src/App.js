@@ -3,8 +3,8 @@ import Layout from "./components/Layout/Layout";
 import UnAuthenticated from "./components/Authentication/UnAunthenicated";
 import Authenticated from "./components/Authentication/Authenicated";
 import { BrowserRouter as Router, Redirect } from "react-router-dom";
-import { getAuth, onAuthStateChanged } from 'firebase/auth'
-import app from './base'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import app from "./base";
 
 const App = () => {
     const [darkMode, setDarkMode] = useState(false);
@@ -17,21 +17,20 @@ const App = () => {
     useEffect(() => {
         const auth = getAuth(app);
         onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                setUser(user);
-            } else {
+            if (user) {
                 setUser(" ");
-                localStorage.setItem("id", user.uid);
+            } else {
+                setUser(user);
             }
-        })
+        });
     }, []);
     return (
         <Layout darkMode={darkMode} handleSwitch={handleSwitch}>
             <Router>
                 {user ? (
-                    <Authenticated darkMode={darkMode} handleSwitch={handleSwitch}/>
+                    <Authenticated darkMode={darkMode} handleSwitch={handleSwitch} />
                 ) : (
-                    <UnAuthenticated darkMode={darkMode} handleSwitch={handleSwitch}/>
+                    <UnAuthenticated darkMode={darkMode} handleSwitch={handleSwitch} />
                 )}
                 <Redirect to="/" />
             </Router>

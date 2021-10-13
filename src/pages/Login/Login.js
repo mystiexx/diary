@@ -11,6 +11,7 @@ const Login = (props) => {
     const [show, setShow] = useState("false");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const clearError = () => {
         setEmail(" ");
@@ -19,18 +20,20 @@ const Login = (props) => {
 
     const handleLogin = () => {
         clearError();
-        const auth = getAuth(app)
-            signInWithEmailAndPassword(auth, email, password)
+        setLoading(true);
+        const auth = getAuth(app);
+        signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 console.log(userCredential.user);
             })
             .catch((error) => {
                 console.log(error.code);
+                setLoading(false);
             });
     };
     return (
         <div className="login">
-            <Switch handleSwitch={props.switch}/>
+            <Switch handleSwitch={props.switch} />
             <div className={props.darkMode ? "login-box-dark" : "login-box"}>
                 <div>
                     <div className="input-field">
@@ -58,7 +61,16 @@ const Login = (props) => {
                 <div className="btn-field">
                     <label>Sign up</label>
                     <button className="login-btn" onClick={handleLogin}>
-                        Sign in
+                        {loading ? (
+                            <lord-icon
+                                src="https://cdn.lordicon.com/kvsszuvz.json"
+                                trigger="loop"
+                                colors="primary:#ffffff,secondary:#08a88a"
+                                style={{ width: "50px", height: "50px" }}
+                            />
+                        ) : (
+                            " Sign in"
+                        )}
                     </button>
                 </div>
             </div>
