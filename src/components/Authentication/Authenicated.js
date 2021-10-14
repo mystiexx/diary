@@ -7,7 +7,7 @@ const Authenticated = ( props ) => {
     return(
         <Router>
         <Route exact path="/">
-            <Header>
+            <Header darkMode={props.darkMode}>
             <Home darkMode={props.darkMode} switch={props.handleSwitch}/>
             </Header>
         </Route>

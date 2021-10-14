@@ -78,16 +78,15 @@
     padding: 40px;
     width: 70%;
     background-color: white;
-    background-color: #3E2C41;
+    background-color: #212121;
 }
 
 .login-box-dark .input-field{
     display: flex;
-    border: 1px solid #261C2C;
     padding: 10px;
     border-radius: 10px;
     justify-content: center;
-    background-color: #261C2C;
+    background-color: #181818;
 }
 
 .login-box-dark input{
@@ -217,16 +216,16 @@
         transform: translate(-50%, -50%);
         padding: 40px;
         width: 25%;
-        background-color: #3E2C41;
+        background-color: #212121;
+        border-radius: 5px;
     }
     
     .login-box-dark .input-field{
         display: flex;
-        border: 1px solid #261C2C;
         padding: 10px;
         border-radius: 10px;
         justify-content: center;
-        background-color: #261C2C;
+        background-color: #181818;
     }
     
     .login-box-dark input{
