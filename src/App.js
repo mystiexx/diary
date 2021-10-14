@@ -28,7 +28,7 @@ const App = () => {
         <Layout darkMode={darkMode} handleSwitch={handleSwitch}>
             <Router>
                 {user ? (
-                    <Authenticated darkMode={darkMode} handleSwitch={handleSwitch} />
+                    <Authenticated darkMode={darkMode}  handleSwitch={handleSwitch} />
                 ) : (
                     <UnAuthenticated darkMode={darkMode} handleSwitch={handleSwitch} />
                 )}

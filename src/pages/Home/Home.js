@@ -3,46 +3,28 @@ import Switch from "../../components/Switch/Switch";
 import "./Home.css";
 import app from "../../base";
 import { getAuth } from "firebase/auth";
-import {
-    collection,
-    addDoc,
-    getFirestore,
-    getDocs,
-    orderBy,
-    deleteDoc,
-    doc,
-} from "firebase/firestore";
+import { collection, addDoc, getFirestore, deleteDoc, doc } from "firebase/firestore";
 import Toast from "../../components/UI/Toast";
+import { useHistory } from "react-router";
+import dayjs from "dayjs";
 
 const Home = (props) => {
     const [entry, setEntry] = useState(" ");
     const [loading, setLoading] = useState(false);
-    const [entries, setEntries] = useState([]);
     const [show, setShow] = useState(false);
+    const history = useHistory();
+    const entries = props.entries;
+    const darkMode = props.darkMode
+    const load = props.fetch;
 
     const close = () => {
         setShow(false);
     };
 
-    const getAll = async () => {
-        const db = getFirestore(app);
-        await getDocs(collection(db, "entries"), orderBy("createdAt", "desc")).then(
-            (querySnapshot) => {
-                // eslint-disable-next-line array-callback-return
-                const documents = querySnapshot.docs.map((doc) => {
-                    if (doc.exists) {
-                        return { ...doc.data(), uid: doc.id };
-                    }
-                });
-                setEntries(documents);
-            }
-        );
-    };
-
     const Delete = async (data) => {
         const db = getFirestore(app);
         await deleteDoc(doc(db, "entries", data));
-        getAll();
+        load();
     };
 
     const clearInput = () => {
@@ -60,7 +42,7 @@ const Home = (props) => {
             createdAt: new Date().toISOString(),
         })
             .then(() => {
-                setShow(true)
+                setShow(true);
                 setLoading(false);
             })
             .catch((error) => {
@@ -69,7 +51,7 @@ const Home = (props) => {
             });
 
         clearInput();
-        getAll();
+        load();
     };
 
     const scrollTop = () => {
@@ -77,17 +59,16 @@ const Home = (props) => {
     };
 
     useEffect(() => {
-        getAll();
-        console.log(entries);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        window.scrollTo(0, 0);
     }, []);
+
     return (
         <div className="Home">
             <div style={{ marginTop: "80px" }}>
                 <Toast show={show} close={close}>
                     New Entry Made
                 </Toast>
-                <Switch handleSwitch={props.switch} />
+                <Switch handleSwitch={props.switch} darkMode={darkMode}/>
 
                 <div className="add-button" onClick={scrollTop}>
                     +
@@ -116,17 +97,25 @@ const Home = (props) => {
                     </button>
                 </div>
 
-                <div className="container">
-                    {entries.map((data, id) => (
-                        <div className={props.darkMode ? "card-dark" : "card"} key={id}>
-                            <h5>{data.body.substring(0, 20)}...</h5>
+                {entries.length <= 0 ? (
+                    <div>No Entry Yet</div>
+                ) : (
+                    <div className="container">
+                        {entries.map((data, id) => (
+                            <div className={props.darkMode ? "card-dark" : "card"} key={data.uid}>
+                                <p onClick={() => history.push(`/read/${data.uid}`)}>
+                                    {dayjs(data.createdAt).format("dddd D MMM YYYY")}{" "}
+                                </p>
 
-                            <div>
-                                <button onClick={() => Delete(data.uid)}>Delete</button>
+                                <div>
+                                    <button onClick={() => Delete(data.uid)} className="delete-btn">
+                                        Delete
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );
