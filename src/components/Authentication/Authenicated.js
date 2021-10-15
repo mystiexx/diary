@@ -10,6 +10,7 @@ import Read from "../../pages/Read/Read";
 const Authenticated = (props) => {
     const [entries, setEntries] = useState([]);
     const [loading, setLoading] = useState(true);
+    const checked = props.checked
 
     const getAll = async () => {
         const db = getFirestore(app);
@@ -37,13 +38,14 @@ const Authenticated = (props) => {
                 <Spinner />
             ) : (
                 <Router>
-                    <Header darkMode={props.darkMode}>
+                    <Header darkMode={props.darkMode}  switch={props.handleSwitch}  checked={checked}>
                         <Route exact path="/">
                             <Home
                                 entries={entries}
                                 fetch={getAll}
                                 darkMode={props.darkMode}
                                 switch={props.handleSwitch}
+                                checked={checked}
                             />
                         </Route>
 

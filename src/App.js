@@ -9,9 +9,17 @@ import app from "./base";
 const App = () => {
     const [darkMode, setDarkMode] = useState(false);
     const [user, setUser] = useState(" ");
+    const [checked, setChecked] = useState(false);
 
     const handleSwitch = () => {
-        setDarkMode(!darkMode);
+        const check = localStorage.getItem("CHC");
+        if (check === !darkMode) {
+            localStorage.removeItem("CHC");
+        } else {
+            setDarkMode(!darkMode);
+            localStorage.setItem("CHC", !darkMode);
+            setChecked(!darkMode);
+        }
     };
 
     useEffect(() => {
@@ -23,12 +31,28 @@ const App = () => {
                 setUser(user);
             }
         });
+
+        localStorage.setItem("CHC", !darkMode);
+
+        const check = localStorage.getItem("CHC");
+        if (check === darkMode) {
+            setChecked(!darkMode);
+            setDarkMode(!darkMode)
+        } else {
+            setChecked(!darkMode);
+            setDarkMode(!darkMode)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <Layout darkMode={darkMode} handleSwitch={handleSwitch}>
             <Router>
                 {user ? (
-                    <Authenticated darkMode={darkMode}  handleSwitch={handleSwitch} />
+                    <Authenticated
+                        checked={checked}
+                        darkMode={darkMode}
+                        handleSwitch={handleSwitch}
+                    />
                 ) : (
                     <UnAuthenticated darkMode={darkMode} handleSwitch={handleSwitch} />
                 )}

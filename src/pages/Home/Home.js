@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Switch from "../../components/Switch/Switch";
 import "./Home.css";
 import app from "../../base";
 import { getAuth } from "firebase/auth";
@@ -7,6 +6,7 @@ import { collection, addDoc, getFirestore, deleteDoc, doc } from "firebase/fires
 import Toast from "../../components/UI/Toast";
 import { useHistory } from "react-router";
 import dayjs from "dayjs";
+import { BsSun,BsMoonStars } from 'react-icons/bs'
 
 const Home = (props) => {
     const [entry, setEntry] = useState(" ");
@@ -14,7 +14,6 @@ const Home = (props) => {
     const [show, setShow] = useState(false);
     const history = useHistory();
     const entries = props.entries;
-    const darkMode = props.darkMode
     const load = props.fetch;
 
     const close = () => {
@@ -68,8 +67,13 @@ const Home = (props) => {
                 <Toast show={show} close={close}>
                     New Entry Made
                 </Toast>
-                <Switch handleSwitch={props.switch} darkMode={darkMode}/>
+          
 
+                <div onClick={props.switch} className={props.darkMode ? 'switch-box-dark' : 'switch-box'}>
+                    {
+                        props.checked ?<BsSun size={30} className='icon'/> : <BsMoonStars size={30} className='icon'/>
+                    }
+                    </div>
                 <div className="add-button" onClick={scrollTop}>
                     +
                 </div>
