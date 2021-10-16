@@ -10,6 +10,7 @@ import { BsSun,BsMoonStars } from 'react-icons/bs'
 
 const Home = (props) => {
     const [entry, setEntry] = useState(" ");
+    const [userId, setUserId] = useState(" ");
     const [loading, setLoading] = useState(false);
     const [show, setShow] = useState(false);
     const history = useHistory();
@@ -59,6 +60,10 @@ const Home = (props) => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        const auth = getAuth(app);
+        const user = auth.currentUser;
+        setUserId(user.uid)
+       
     }, []);
 
     return (
@@ -105,14 +110,14 @@ const Home = (props) => {
                     <div>No Entry Yet</div>
                 ) : (
                     <div className="container">
-                        {entries.map((data, id) => (
+                        {entries.filter((d) => d.id === userId).map((data, id) => (
                             <div className={props.darkMode ? "card-dark" : "card"} key={data.uid}>
-                                <p onClick={() => history.push(`/read/${data.uid}`)}>
+                                <p onClick={() => history.push(`/read/${data.uid}`)} style={{textAlign:'center'}}>
                                     {dayjs(data.createdAt).format("dddd D MMM YYYY")}{" "}
                                 </p>
 
                                 <div>
-                                    <button onClick={() => Delete(data.uid)} className="delete-btn">
+                                    <button onClick={() => Delete(data.uid)} className={props.darkMode ? 'delete-btn-dark' : 'delete-btn'}>
                                         Delete
                                     </button>
                                 </div>

@@ -13,12 +13,12 @@ const App = () => {
 
     const handleSwitch = () => {
         const check = localStorage.getItem("CHC");
-        if (check === !darkMode) {
-            localStorage.removeItem("CHC");
-        } else {
-            setDarkMode(!darkMode);
+        if (check !== darkMode) {
             localStorage.setItem("CHC", !darkMode);
+            setDarkMode(!darkMode);
             setChecked(!darkMode);
+        } else {
+            localStorage.removeItem("CHC");
         }
     };
 
@@ -32,17 +32,17 @@ const App = () => {
             }
         });
 
-        localStorage.setItem("CHC", !darkMode);
+        // localStorage.setItem("CHC", !darkMode);
 
         const check = localStorage.getItem("CHC");
         if (check === darkMode) {
-            setChecked(!darkMode);
-            setDarkMode(!darkMode)
+            setDarkMode(!darkMode);
+            setChecked(darkMode);
         } else {
-            setChecked(!darkMode);
-            setDarkMode(!darkMode)
+            setDarkMode(darkMode);
+            setChecked(darkMode);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (
         <Layout darkMode={darkMode} handleSwitch={handleSwitch}>

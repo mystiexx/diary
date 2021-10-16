@@ -1,34 +1,57 @@
+/* eslint-disable default-case */
 import React, { useState } from "react";
 import "./Login.css";
 import { GrMail } from "react-icons/gr";
 import { RiKey2Fill } from "react-icons/ri";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import app from "../../base";
 import Switch from "../../components/Switch/Switch";
+import { FaUserTie } from "react-icons/fa";
 import { useHistory } from "react-router";
+import { collection, addDoc, getFirestore, } from "firebase/firestore";
 
-const Login = (props) => {
+const Register = (props) => {
     const [show, setShow] = useState("false");
     const [email, setEmail] = useState("");
+    const [name, setName] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const history = useHistory()
+    const history = useHistory();
 
     const clearError = () => {
         setEmail(" ");
         setPassword(" ");
     };
 
-    const handleLogin = () => {
+    const handleLogin =  () => {
         clearError();
         setLoading(true);
         const auth = getAuth(app);
-        signInWithEmailAndPassword(auth, email, password)
+        const db = getFirestore(app)
+        createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 console.log(userCredential.user);
+                const uid = userCredential.user.uid
+             addDoc(collection(db, 'users',  userCredential.user.uid), {
+                    uid,
+                    email: email,
+                    name: name,
+                })
+                
             })
             .catch((error) => {
+                switch ( error.code ) {
+                    case "auth/email-already-in-use":
+                        case "auth/invalid-email":
+                            setEmailError(error.code);
+                            break;
+                        case "auth/weak-password":
+                            setPasswordError(error.message);
+                            break;
+                }
                 console.log(error.code);
                 setLoading(false);
             });
@@ -37,7 +60,17 @@ const Login = (props) => {
         <div className="login">
             <Switch handleSwitch={props.switch} />
             <div className={props.darkMode ? "login-box-dark" : "login-box"}>
+               
                 <div>
+                    <div className="input-field">
+                        <FaUserTie size={30} />
+                        <input
+                            type="text"
+                            placeholder="FullName"
+                            onChange={(e) => setName(e.target.value)}
+                        />
+                    </div>
+                    <br />
                     <div className="input-field">
                         <GrMail size={30} />
                         <input
@@ -46,6 +79,7 @@ const Login = (props) => {
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
+                    <p style={{ color:'red'}}>{emailError}</p>
                     <br />
                     <div className="input-field">
                         <RiKey2Fill size={30} />
@@ -58,10 +92,14 @@ const Login = (props) => {
                             {show ? <FiEyeOff size={20} /> : <FiEye size={20} />}
                         </button>
                     </div>
+                    <p> {passwordError}</p>
                 </div>
 
                 <div className="btn-field">
-                    <label>Don't have an account <label onClick={()=> history.push('/sign-up')}>Sign up</label></label>
+                    <label>
+                        Already have an account{" "}
+                        <label onClick={() => history.push("/")}>Sign in </label>
+                    </label>
                     <button className="login-btn" onClick={handleLogin}>
                         {loading ? (
                             <lord-icon
@@ -71,7 +109,7 @@ const Login = (props) => {
                                 style={{ width: "50px", height: "50px" }}
                             />
                         ) : (
-                            " Sign in"
+                            " Sign up"
                         )}
                     </button>
                 </div>
@@ -80,4 +118,4 @@ const Login = (props) => {
     );
 };
 
-export default Login;
+export default Register;

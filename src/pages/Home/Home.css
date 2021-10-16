@@ -83,10 +83,22 @@
 
 .Home .delete-btn {
     outline: none;
-    border: none;
+    border: 1px solid red;
     background: none;
     cursor: pointer;
-    color: #000;
+    color: red;
+    width: 100%;
+    font-size: 0.9rem;
+}
+
+.Home .delete-btn-dark {
+    outline: none;
+    border: 1px solid red;
+    background: none;
+    cursor: pointer;
+    color: red;
+    width: 100%;
+    font-size: 0.9rem;
 }
 
 .Home .switch-box {
@@ -234,4 +246,23 @@
         text-shadow: 0 0 5px #ffee10;
         margin-top: 10px;
     }
+
+    
+.Home .delete-btn {
+    outline: none;
+    border: 1px solid red;
+    background: none;
+    cursor: pointer;
+    color: red;
+}
+
+.Home .delete-btn-dark {
+    outline: none;
+    border: 1px solid red;
+    background: none;
+    cursor: pointer;
+    color: red;
+    width: 100%;
+    font-size: 0.9rem;
+}
 }
